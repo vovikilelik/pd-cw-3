@@ -1,0 +1,7 @@
+PWD_HASH_SALT = 'ls$kxu'
+PWD_HASH_ITERATIONS = 100_000
+
+HASH_ALG = 'sha256'
+
+JWT_SECRET = 'qwerty'
+JWT_ALG = 'HS512'
