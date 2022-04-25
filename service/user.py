@@ -1,7 +1,5 @@
 import base64
 import hashlib
-import hmac
-from builtins import Exception
 
 from constants import PWD_HASH_SALT, PWD_HASH_ITERATIONS, HASH_ALG
 from dao.model.user import User
@@ -22,7 +20,7 @@ class UserService:
     def get_hash(password):
         phash = hashlib.pbkdf2_hmac(
             HASH_ALG,
-            password.encode('utf-8'),  # Convert the password to bytes
+            password.encode('utf-8'),
             PWD_HASH_SALT.encode(),
             PWD_HASH_ITERATIONS
         )
@@ -30,7 +28,7 @@ class UserService:
         return base64.b64encode(phash)
 
     def update(self, user_d, **overrides):
-        return self.dao.update(user_d, overrides)
+        return self.dao.update(user_d, **overrides)
 
     def update_password(self, user_d, password):
         return self.dao.update(user_d, password=self.get_hash(password))

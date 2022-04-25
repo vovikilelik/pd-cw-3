@@ -23,7 +23,7 @@ class AuthService:
         return self.user_service.check_user(username, password)
 
     @staticmethod
-    def check_token(token, *args):
+    def check_token(token):
         data = jwt.decode(token, JWT_SECRET, algorithms=JWT_ALG)
 
         if data['exp'] < calendar.timegm(datetime.datetime.utcnow().timetuple()):
@@ -34,8 +34,7 @@ class AuthService:
     @staticmethod
     def generate_token(user):
         data = {
-            'username': user.username,
-            'role': user.role
+            'username': user.username
         }
 
         access_token = jwt.encode({**data, 'exp': get_exp(30)}, JWT_SECRET, algorithm=JWT_ALG)
@@ -47,19 +46,19 @@ class AuthService:
     def get_hash(password):
         return hashlib.pbkdf2_hmac(
             HASH_ALG,
-            password.encode('utf-8'),  # Convert the password to bytes
+            password.encode('utf-8'),
             PWD_HASH_SALT.encode(),
             PWD_HASH_ITERATIONS
         ).decode("utf-8", "ignore")
 
     @staticmethod
-    def auth_required(*args):
+    def auth_required():
         def decorator_context(func):
             def wrapper(*args, **kwargs):
                 req_json = request.json
 
                 access_token = req_json.get('access_token')
-                data = AuthService.check_token(access_token, *args)
+                data = AuthService.check_token(access_token)
 
                 if not data:
                     raise abort(403)
