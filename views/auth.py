@@ -23,6 +23,7 @@ class AuthRegisterView(Resource):
 
 @auth_ns.route('/login')
 class AuthView(Resource):
+
     def post(self):
         req_json = request.json
 

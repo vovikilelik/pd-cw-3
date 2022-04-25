@@ -29,9 +29,9 @@ def create_data(app, db):
     with app.app_context():
         db.create_all()
 
-        u1 = User(username="vasya", password=UserService.get_hash("my_little_pony"), role="user")
-        u2 = User(username="oleg", password=UserService.get_hash("qwerty"), role="user")
-        u3 = User(username="ivan", password=UserService.get_hash("P@ssw0rd"), role="admin")
+        u1 = User(username="vasya", password=UserService.get_hash("my_little_pony"), name="Vasili", surname='Glebovsky')
+        u2 = User(username="oleg", password=UserService.get_hash("qwerty"), name="Oleg", surname='Ivanov')
+        u3 = User(username="ivan", password=UserService.get_hash("P@ssw0rd"), name="Benedict", surname='Krachnenberg')
 
         with db.session.begin():
             db.session.add_all([u1, u2, u3])
@@ -41,7 +41,7 @@ def register_extensions(app):
     db.init_app(app)
 
     # Добавляет пользователей, при необходимости раскомментировать
-    #create_data(app, db)
+    # create_data(app, db)
 
     api = Api(app)
     api.add_namespace(director_ns)

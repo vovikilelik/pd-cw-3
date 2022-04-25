@@ -10,6 +10,7 @@ director_ns = Namespace('directors')
 @director_ns.route('/')
 class DirectorsView(Resource):
 
+    @auth_service.auth_required()
     def get(self):
         page = request.args.get('page')
 
@@ -21,6 +22,7 @@ class DirectorsView(Resource):
 @director_ns.route('/<int:rid>')
 class DirectorView(Resource):
 
+    @auth_service.auth_required()
     def get(self, rid):
         r = director_service.get_one(rid)
         sm_d = DirectorSchema().dump(r)
