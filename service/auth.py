@@ -23,13 +23,10 @@ class AuthService:
         return self.user_service.check_user(username, password)
 
     @staticmethod
-    def check_token(token, *roles):
+    def check_token(token, *args):
         data = jwt.decode(token, JWT_SECRET, algorithms=JWT_ALG)
 
         if data['exp'] < calendar.timegm(datetime.datetime.utcnow().timetuple()):
-            return False
-
-        if len(roles) and data['role'] not in roles:
             return False
 
         return data
@@ -56,16 +53,13 @@ class AuthService:
         ).decode("utf-8", "ignore")
 
     @staticmethod
-    def auth_required(*roles):
+    def auth_required(*args):
         def decorator_context(func):
             def wrapper(*args, **kwargs):
-                req_json = request.json if request.json else {
-                    'access_token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1c2VybmFtZSI6Im9sZWciLCJyb2xlIjoidXNlciIsImV4cCI6MTY1MDMwMDcxNH0.q6Ype_scPyjoqezra5aWw2pPCZhoUHiA9mhb3tK699iThnRJ9NaHha54wjPlbl7xzvy1Ri0pLcCRar5N4YF1Gg'}
+                req_json = request.json
 
                 access_token = req_json.get('access_token')
-                data = AuthService.check_token(access_token, *roles)
-
-                print('roles', roles)
+                data = AuthService.check_token(access_token, *args)
 
                 if not data:
                     raise abort(403)

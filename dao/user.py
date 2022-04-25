@@ -29,11 +29,15 @@ class UserDAO:
         self.session.delete(user)
         self.session.commit()
 
-    def update(self, user_d):
+    def update(self, user_d, **overrides):
         user = self.get_one(user_d.get("id"))
-        user.username = user_d.get("username")
-        user.password = user_d.get("password")
-        user.role = user_d.get("role")
+
+        user.username = overrides['username'] if 'username' in overrides else user_d.get("username")
+        user.password = overrides['password'] if 'password' in overrides else user_d.get("password")
+
+        user.name = overrides['name'] if 'name' in overrides else user_d.get("name")
+        user.surname = overrides['surname'] if 'surname' in overrides else user_d.get("surname")
+        user.favorite_genre = overrides['favorite_genre'] if 'favorite_genre' in overrides else user_d.get("favorite_genre")
 
         self.session.add(user)
         self.session.commit()

@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 from flask_restx import Api
 
 from config import Config
@@ -14,6 +15,11 @@ from views.users import users_ns
 
 def create_app(config_object):
     app = Flask(__name__)
+
+    # Setup CORS
+    cors = CORS(app)
+    app.config['CORS_HEADERS'] = 'Content-Type'
+
     app.config.from_object(config_object)
     register_extensions(app)
     return app
@@ -49,4 +55,4 @@ app = create_app(Config())
 app.debug = True
 
 if __name__ == '__main__':
-    app.run(host="localhost", port=10001, debug=True)
+    app.run(host="127.0.0.1", port=5000, debug=True)

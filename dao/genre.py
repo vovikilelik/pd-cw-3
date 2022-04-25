@@ -8,8 +8,11 @@ class GenreDAO:
     def get_one(self, bid):
         return self.session.query(Genre).get(bid)
 
-    def get_all(self):
-        return self.session.query(Genre).all()
+    def get_all(self, page=None, limit=None):
+        if page is not None and limit is not None:
+            return self.session.query(Genre).offset(page * limit).limit(limit).all()
+        else:
+            return self.session.query(Genre).all()
 
     def create(self, genre_d):
         ent = Genre(**genre_d)

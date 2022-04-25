@@ -6,7 +6,22 @@ from implemented import user_service, auth_service
 auth_ns = Namespace('auth')
 
 
-@auth_ns.route('/')
+@auth_ns.route('/register')
+class AuthRegisterView(Resource):
+
+    def post(self):
+        req_json = request.json
+
+        username = req_json.get('username')
+        password = req_json.get('password')
+
+        user = user_service.create(username, password)
+
+        access_token, refresh_token = auth_service.generate_token(user)
+        return {'access_token': access_token, 'refresh_token': refresh_token}, 201
+
+
+@auth_ns.route('/login')
 class AuthView(Resource):
     def post(self):
         req_json = request.json
