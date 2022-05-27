@@ -1,0 +1,14 @@
+name: Build
+on: [push]
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: clone
+        uses: actions/checkout@v2
+      - name: docker build
+        run: docker build -t student5000/skypro:latest .
+      - name: docker login
+        run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
+      - name: docker push
+        run: docker push student5000/skypro:latest
